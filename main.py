@@ -65,10 +65,13 @@ urls = []
 for link in soup.find_all("article"):
     try:
         href = link.find('a', class_='list-card-link list-card-link-top-margin')
+        print('1', href)
         addresses = href.find('address', class_='list-card-addr')
+        print('2', addresses)
         addresses.extract()
         #print(link.find('a', {'class': 'list-card-link list-card-link-top-margin'}).text)
         urls.append(href)
+        print('3', urls)
     except:
         print('error')
 
@@ -90,7 +93,7 @@ df['prices'] = df['prices'].replace('<div class="list-card-price">', ' ', regex=
 df['address'] = df['address'].replace('<address class="list-card-addr">', ' ', regex=True)
 df['prices'] = df['prices'].replace('</div>', ' ', regex=True)
 df['address'] = df['address'].replace('</address>', ' ', regex=True)
-df['prices'] = df['prices'].str.replace(r'\D', '')
+df['prices'] = df['prices'].str.replace(r'\D', '', regex=True)
 
 print('remove html tags from beds column')
 df['beds'] = df['beds'].replace('<ul class="list-card-details"><li class="">', ' ', regex=True)
@@ -128,7 +131,9 @@ df = df[['prices', 'address', 'links', 'beds', 'baths', 'sq_feet']]
 print('calculate the zestimate and insert into a dataframe')
 zillow_zestimate = []
 for link in df['links']:
+    print(link)
     r = s.get(link, headers=req_headers)
+    print(r)
     soup = BeautifulSoup(r.content, 'html.parser')
     home_value = soup.select_one('h4:contains("Home value")')
     if not home_value:
