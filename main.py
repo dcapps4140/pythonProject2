@@ -42,8 +42,6 @@ soup = BeautifulSoup(r.content, 'html.parser')
 # create the first two dataframes
 df = pd.DataFrame()
 
-print(df)
-
 # all for loops are pulling the specified variable using beautiful soup and inserting into said variable
 for i in soup:
     address = soup.find_all(class_='list-card-addr')
@@ -66,9 +64,10 @@ urls = []
 # loop through url, pull the href and strip out the address tag
 for link in soup.find_all("article"):
     try:
-        href = link.find('a', class_="list-card-link")
-        addresses = href.find('address', class_= 'list-card-addr')
+        href = link.find('a', class_='list-card-link list-card-link-top-margin')
+        addresses = href.find('address', class_='list-card-addr')
         addresses.extract()
+        #print(link.find('a', {'class': 'list-card-link list-card-link-top-margin'}).text)
         urls.append(href)
     except:
         print('error')
@@ -101,8 +100,6 @@ df['beds'] = df['beds'].replace('<abbr class="list-card-label"> <!-- -->bd</abbr
 df['beds'] = df['beds'].replace('<abbr class="list-card-label"> <!-- -->sqft</abbr></li><li class="list-card-statusText">- House for sale</li></ul>', ' ', regex=True)
 df['beds'] = df['beds'].replace('Studio</li><li>', '0 ', regex=True)
 
-print(df['beds'])
-
 print('split beds column into beds, bath and sq_feet')
 df[['beds', 'baths', 'sq_feet']] = df.beds.str.split(expand=True)
 
@@ -119,14 +116,14 @@ df['prices'] = df['prices'].astype('float')
 print('remove spaces from link column')
 df['links'] = df.links.str.replace(' ', '')
 
+print(df['links'])
+
 print('The column datatypes are:')
 print(df.dtypes)
 print('The dataframe shape is:', df.shape)
 
 print('rearrange the columns')
 df = df[['prices', 'address', 'links', 'beds', 'baths', 'sq_feet']]
-
-# df
 
 print('calculate the zestimate and insert into a dataframe')
 zillow_zestimate = []
