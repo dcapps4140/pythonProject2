@@ -43,7 +43,7 @@ with requests.Session() as s:
     url_links = [url]
 
 # add contents of urls to soup variable from each url
-soup = BeautifulSoup(r.content, 'html.parser')
+#soup = BeautifulSoup(r.content, 'html.parser')
 
 # page_links = [soup, soup1, soup2, soup3, soup4, soup5, soup6, soup7, soup8, soup9]
 results = []
@@ -51,7 +51,7 @@ results = []
 #df = pd.DataFrame()
 #*******************
 response = requests.get(url, headers=headers, params=params)
-content = BeautifulSoup(response, 'html.parser')
+content = BeautifulSoup(response, 'lxml')
 deck = content.find('ul', {'class': 'photo-cards photo-cards_wow photo-cards_short photo-cards_extra-attribution'})
 for card in deck.contents:
     script = card.find('script', {'type': 'application/ld+json'})
